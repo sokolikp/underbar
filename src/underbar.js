@@ -316,12 +316,12 @@
 
     return function() {
       for(key in results) {
-        if(arguments === key) {
+        if(arguments[0] === key) {
           return results[key];
         }
       }
       result = func.apply(this, arguments);
-      results[arguments] = result;
+      results[arguments[0]] = result;
       return result;
     };
   };
