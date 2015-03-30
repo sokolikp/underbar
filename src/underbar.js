@@ -312,8 +312,6 @@
   // instead if possible.
   _.memoize = function(func) {
     var results = {};  
-    var result; 
-    //var alreadyCalled = false;
     var result;
 
     return function() {
