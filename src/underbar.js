@@ -321,7 +321,7 @@
         }
       }
       result = func.apply(this, arguments);
-      _.extend(results, result);
+      results[arguments] = result;
       return result;
     };
   };
