@@ -312,6 +312,7 @@
   // instead if possible.
   _.memoize = function(func) {
     var results = [];
+    
     return _.once(func);
   };
 
@@ -346,6 +347,16 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var result = array.slice();
+    var random;
+    var temp;
+    for(var i=0; i<result.length; i++) {
+      random = Math.floor((Math.random() * result.length));
+      temp = result[random];
+      result[random] = result[i];
+      result[i] = temp;
+    }
+    return result;
   };
 
 
