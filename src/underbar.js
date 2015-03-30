@@ -315,13 +315,14 @@
     var result;
 
     return function() {
-      for(key in results) {
-        if(arguments[0] === key) {
+      for(var key in results) {
+        console.log(typeof(arguments[0]));
+        if(String(arguments[0]) === key) {
           return results[key];
         }
       }
       result = func.apply(this, arguments);
-      results[arguments[0]] = result;
+      results[String(arguments[0])] = result;
       return result;
     };
   };
