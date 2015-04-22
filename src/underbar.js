@@ -105,6 +105,7 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+    
     var result = [];
     _.each(array, function(item) {
       if(_.indexOf(result, item) === -1) {
@@ -218,15 +219,6 @@
         return Boolean(iterator(item));
       }
     }, false);
-    /*if(collection.length === 0) {
-      return false;
-    }
-    return _.every(collection, function(match, item) {
-      if(match) {
-        return true;
-      } 
-      return Boolean(iterator(item));
-    });*/
   };
 
 
@@ -314,15 +306,14 @@
     var results = {};  
     var result;
 
-    return function() {
+    return function(item) {
       for(var key in results) {
-        console.log(typeof(arguments[0]));
-        if(String(arguments[0]) === key) {
+        if(String(item) === key) {
           return results[key];
         }
       }
       result = func.apply(this, arguments);
-      results[String(arguments[0])] = result;
+      results[String(item)] = result;
       return result;
     };
   };
@@ -358,11 +349,19 @@
     var result = array.slice();
     var random;
     var temp;
-    for(var i=0; i<result.length; i++) {
-      random = Math.floor((Math.random() * result.length));
-      temp = result[random];
-      result[random] = result[i];
-      result[i] = temp;
+    var check = 1;
+    while(check) {
+      for(var i=0; i<result.length; i++) {
+        random = Math.floor((Math.random() * result.length));
+        temp = result[random];
+        result[random] = result[i];
+        result[i] = temp;
+      }
+      for(var i=0; i<result.length; i++) {
+        if(result[i] !== array[i]) {
+          check = 0;
+        }
+      }
     }
     return result;
   };
@@ -379,6 +378,17 @@
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
+    var result = [];
+    _.each(collection, function(item) {
+      if(typeof(functionOrKey) === 'function') {
+        result.push(functionOrKey.apply(item));
+      }
+      else {
+        result.push(item[functionOrKey]());
+      }
+    });
+    return result;
+    //return functionOrKey.apply(collection, arguments);
   };
 
   // Sort the object's values by a criterion produced by an iterator.
@@ -386,6 +396,25 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var unsorted = _.map(collection, iterator);
+    console.log(unsorted);
+    var sorted = unsorted.sort();
+    console.log(sorted);
+    console.log(unsorted);
+    if(Array.isArray(collection[0])) {
+      return sorted;
+    }
+    else {
+      var result = [];
+      for(var i=0; i<sorted.length; i++) {
+        for(var j=0; j<collection.length; j++) {
+          if(collection[i][j] === sorted[i]) {
+            result.push(collection[i]);
+          }
+        }   
+      }
+      return result;
+    }
   };
 
   // Zip together two or more arrays with elements of the same index
