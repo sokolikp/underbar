@@ -396,16 +396,28 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
-    var unsorted = _.map(collection, iterator);
-    console.log(unsorted);
-    var sorted = unsorted.sort();
-    console.log(sorted);
-    console.log(unsorted);
-    if(Array.isArray(collection[0])) {
-      return sorted;
+    //var sort = _.invoke(collection, iterator).sort();
+    if(typeof(iterator) === 'function') {
+      return _.map(collection, iterator).sort();
     }
     else {
-      var result = [];
+      var sorted = [];
+      var result =[];
+      _.each(collection, function(item) {
+        sorted.push(item[iterator]);
+      });
+      sorted.sort();
+      for(var i=0; i<sorted.length; i++) {
+        for(var j=0; j<collection.length; j++) {
+          if(sorted[i] === collection[j].length) {
+            result.push(collection[j]);
+            collection.splice(j,1);
+            //break;
+          }
+        }
+        return result;
+      }
+      /*
       for(var i=0; i<sorted.length; i++) {
         for(var j=0; j<collection.length; j++) {
           if(collection[i][j] === sorted[i]) {
@@ -414,6 +426,7 @@
         }   
       }
       return result;
+      */
     }
   };
 
