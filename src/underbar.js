@@ -477,11 +477,45 @@
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var result = [];
+    //var flat = _.flatten(Array.prototype.slice.call(arguments));
+    //return _.uniq(flat);
+    for(var i=0; i<arguments.length-1; i++) {
+      for(var j=i+1; j<arguments.length; j++) {
+        for(var k=0; k<arguments[i].length; k++) {
+          for(var l=0; l<arguments[j].length; l++) {
+            if(arguments[i][k] === arguments[j][l]) {
+              result.push(arguments[i][k]);
+            }
+          }
+        }
+      }
+    }
+    return _.uniq(result);
   };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    var intersect = [];
+    var result = [];
+    for(var i=1; i<arguments.length; i++) {
+      intersect.push(_.intersection(array, arguments[i]));
+    }
+    var flatUniq = _.uniq(_.flatten(intersect));
+    var check;
+    for(var i=0; i<array.length; i++) {
+      check = 0;
+      for(var j=0; j<flatUniq.length; j++) {
+        if(array[i] === flatUniq[j]) {
+          check = 1;
+        }
+      }
+      if(!check) {
+        result.push(array[i]);
+      }
+    }
+    return result;
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
