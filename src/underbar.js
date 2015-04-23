@@ -397,8 +397,19 @@
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
     //var sort = _.invoke(collection, iterator).sort();
+    var result = [];
     if(typeof(iterator) === 'function') {
-      return _.map(collection, iterator).sort();
+      var sort = _.map(collection, iterator).sort();
+      var check;
+      for(var i=0; i<sort.length; i++) {
+        check = 0;
+        for(var j=0; j<collection.length; j++) {
+          if(sort[i] === iterator(collection[j]) && !check) {
+            result.push(collection[j]);
+            check = 1;
+          }
+        }
+      }
     }
     else {
       var sorted = [];
@@ -409,13 +420,12 @@
       sorted.sort();
       for(var i=0; i<sorted.length; i++) {
         for(var j=0; j<collection.length; j++) {
-          if(sorted[i] === collection[j].length) {
+          if(sorted[i] === collection[j][iterator]) {
             result.push(collection[j]);
             collection.splice(j,1);
             //break;
           }
-        }
-        return result;
+        }    
       }
       /*
       for(var i=0; i<sorted.length; i++) {
@@ -428,6 +438,7 @@
       return result;
       */
     }
+    return result;
   };
 
   // Zip together two or more arrays with elements of the same index
