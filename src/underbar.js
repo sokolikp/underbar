@@ -398,14 +398,16 @@
   _.sortBy = function(collection, iterator) {
     //var sort = _.invoke(collection, iterator).sort();
     var result = [];
+    var copy = collection.slice();
     if(typeof(iterator) === 'function') {
       var sort = _.map(collection, iterator).sort();
       var check;
       for(var i=0; i<sort.length; i++) {
         check = 0;
-        for(var j=0; j<collection.length; j++) {
-          if(sort[i] === iterator(collection[j]) && !check) {
-            result.push(collection[j]);
+        for(var j=0; j<copy.length; j++) {
+          if(sort[i] === iterator(copy[j]) && !check) {
+            result.push(copy[j]);
+            copy.splice(j,1);
             check = 1;
           }
         }
@@ -419,10 +421,10 @@
       });
       sorted.sort();
       for(var i=0; i<sorted.length; i++) {
-        for(var j=0; j<collection.length; j++) {
-          if(sorted[i] === collection[j][iterator]) {
-            result.push(collection[j]);
-            collection.splice(j,1);
+        for(var j=0; j<copy.length; j++) {
+          if(sorted[i] === copy[j][iterator]) {
+            result.push(copy[j]);
+            copy.splice(j,1);
             //break;
           }
         }    
